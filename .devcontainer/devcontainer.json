@@ -1,0 +1,41 @@
+{
+  "name": "PHP XAMPP Environment",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "web",
+  "workspaceFolder": "/workspace",
+  
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "cweijan.vscode-mysql-client2",
+        "GitHub.copilot",
+        "GitHub.copilot-chat"
+      ],
+      "settings": {
+        "php.validate.executablePath": "/usr/local/bin/php"
+      }
+    }
+  },
+
+  "forwardPorts": [80, 8080, 3306],
+  "portsAttributes": {
+    "80": {
+      "label": "Apache Web Server",
+      "onAutoForward": "notify"
+    },
+    "8080": {
+      "label": "phpMyAdmin",
+      "onAutoForward": "notify"
+    },
+    "3306": {
+      "label": "MySQL Database",
+      "onAutoForward": "silent"
+    }
+  },
+
+  "postCreateCommand": "chmod +x /workspace/.devcontainer/scripts/*.sh && mkdir -p /workspace/logs && chown -R www-data:www-data /workspace/htdocs /workspace/logs",
+  "postStartCommand": "service apache2 start",
+
+  "remoteUser": "root"
+}

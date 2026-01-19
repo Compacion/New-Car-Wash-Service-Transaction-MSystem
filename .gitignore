@@ -1,0 +1,38 @@
+# Logs and temporary files
+logs/
+*.log
+
+# MySQL data directory (persisted in Docker volume)
+mysql_data/
+.devcontainer/mysql-data/
+
+# Database backups (optional - remove this line if you want to track backups)
+backups/
+
+# VS Code settings (optional - remove if you want to share settings)
+.vscode/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# PHP temporary files
+*.tmp
+*.cache
+
+# Session files
+sessions/
+
+# Upload directories (if you create one)
+htdocs/uploads/
+
+# IDE files
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment files (if you create them)
+.env
+.env.local
