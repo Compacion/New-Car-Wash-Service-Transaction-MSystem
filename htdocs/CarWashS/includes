@@ -1,0 +1,30 @@
+/* Navigation / header improvements */
+.site-header{background:linear-gradient(180deg,#0b0d0e 0%, var(--panel) 100%);border-bottom:1px solid rgba(255,255,255,0.03);padding:12px 20px}
+.nav-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.site-title{font-size:20px;color:var(--accent-2);margin:0}
+.site-title .brand{color:#880808;font-size:30px;font-weight:800}
+.main-nav ul{display:flex;gap:14px;list-style:none;margin:0;padding:0}
+.main-nav a{color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:6px;display:inline-block}
+.main-nav a:hover, .main-nav a.active{color:var(--accent);background:rgba(255,255,255,0.02)}
+
+/* mobile toggle */
+.nav-toggle{display:none;background:transparent;border:0;padding:8px;border-radius:8px;cursor:pointer}
+.nav-toggle:focus{outline:2px solid rgba(122,208,230,0.35)}
+.hamburger{display:inline-block;width:22px;height:2px;background:var(--muted);position:relative}
+.hamburger::before,.hamburger::after{content:"";position:absolute;left:0;width:22px;height:2px;background:var(--muted);transition:transform .2s ease}
+.hamburger::before{top:-6px}
+.hamburger::after{top:6px}
+
+/* when nav expanded */
+.nav-open .hamburger{background:transparent}
+.nav-open .hamburger::before{transform:rotate(45deg) translate(3px,3px)}
+.nav-open .hamburger::after{transform:rotate(-45deg) translate(3px,-3px)}
+
+/* responsive */
+@media (max-width:900px){
+  .main-nav{position:absolute;top:64px;left:0;right:0;background:var(--card-bg);padding:12px;border-bottom:1px solid rgba(255,255,255,0.02);backdrop-filter:blur(6px);display:none}
+  .main-nav ul{flex-direction:column;gap:10px}
+  .nav-toggle{display:inline-block}
+  .nav-open .main-nav{display:block}
+  .container{padding:12px}
+}
