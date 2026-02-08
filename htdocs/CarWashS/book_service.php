@@ -13,6 +13,13 @@ if ($client_id <= 0) {
 
 $services = mysqli_query($conn, "SELECT * FROM services ORDER BY name");
 $staff = mysqli_query($conn, "SELECT * FROM staff ORDER BY staff_name");
+
+// user-facing error messages (from redirects)
+$errorMsg = '';
+if (isset($_GET['error'])) {
+    if ($_GET['error'] === 'missing') $errorMsg = 'Please select a service and schedule date/time.';
+    elseif ($_GET['error'] === 'sql') $errorMsg = 'Failed to create booking. Please try again.';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,6 +42,12 @@ $staff = mysqli_query($conn, "SELECT * FROM staff ORDER BY staff_name");
 
     <div class="container">
       <section class="panel form-card">
+        <?php if (!empty($errorMsg)): ?>
+          <div class="notice error" style="margin-bottom:1rem; padding:0.8rem; border-left:4px solid #d9534f; background: rgba(169,46,46,0.04);">
+            <?php echo htmlspecialchars($errorMsg); ?>
+          </div>
+        <?php endif; ?>
+
         <?php if ($client): ?>
           <h2>New Booking</h2>
           <div style="background: rgba(122, 208, 230, 0.06); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; border-left: 4px solid var(--accent-2);">
@@ -99,12 +112,15 @@ $staff = mysqli_query($conn, "SELECT * FROM staff ORDER BY staff_name");
           <p class="muted">Choose a client to book a service</p>
           <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem;">
             <?php 
-            if (mysqli_num_rows($clients) > 0) {
+            if ($clients && mysqli_num_rows($clients) > 0) {
               while ($c = mysqli_fetch_assoc($clients)) { 
-                echo '<a href="?client_id='.$c['client_id'].'" class="quick-action-card" style="text-decoration: none;">\n                  <div style="text-align: left;">\n                    <strong>'.htmlspecialchars($c['client_name']).'</strong><br>';
-                if (!empty($c['plate_number'])) echo '<small style="color: var(--muted);">'.htmlspecialchars($c['plate_number']).'</small><br>';
-                if (!empty($c['vehicle_type'])) echo '<small style="color: var(--muted);">'.htmlspecialchars($c['vehicle_type']).'</small>';
-                echo '\n                  </div>\n                </a>';
+                echo '<a href="?client_id=' . intval($c['client_id']) . '" class="quick-action-card" style="text-decoration: none; display:block;">';
+                echo '<div style="text-align: left;">';
+                echo '<strong>' . htmlspecialchars($c['client_name']) . '</strong><br>';
+                if (!empty($c['plate_number'])) echo '<small style="color: var(--muted);">' . htmlspecialchars($c['plate_number']) . '</small><br>';
+                if (!empty($c['vehicle_type'])) echo '<small style="color: var(--muted);">' . htmlspecialchars($c['vehicle_type']) . '</small>';
+                echo '</div>';
+                echo '</a>';
               }
             } else {
               echo '<p class="muted">No clients found. <a href="client.php">Create one first</a></p>';

@@ -104,8 +104,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (navToggle && mainNav) {
         navToggle.addEventListener('click', function() {
             const isExpanded = this.getAttribute('aria-expanded') === 'true';
-            this.setAttribute('aria-expanded', !isExpanded);
-            document.documentElement.classList.toggle('nav-open');
+            const newVal = !isExpanded;
+            this.setAttribute('aria-expanded', String(newVal));
+            if (newVal) document.documentElement.classList.add('nav-open'); else document.documentElement.classList.remove('nav-open');
         });
 
         // Close menu when clicking a link
