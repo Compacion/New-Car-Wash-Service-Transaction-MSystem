@@ -47,27 +47,30 @@ include 'db_connect.php';
         </form>
       </section>
 
-      <section class="panel table-card">
-        <div class="table-header">
-          <h2>Service Records</h2>
-          <div class="table-actions">
-            <input id="tableSearch" type="search" placeholder="Search services...">
-          </div>
+      <section class="panel">
+        <h2>Available Services</h2>
+        <div style="margin-bottom: 1.5rem;">
+          <input id="tableSearch" type="search" placeholder="Search services..." style="width: 100%; padding: 0.6rem; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 0.5rem; color: #eaf6f8;">
         </div>
-        <div class="table-wrap">
+        <div class="stats-grid" id="servicesGrid">
           <?php
           $sql = "SELECT service_id, name, price, description FROM services ORDER BY service_id DESC";
           $res = mysqli_query($conn, $sql);
           if ($res && mysqli_num_rows($res) > 0) {
-            echo "<table class=\"styled-table\"><thead><tr><th>ID</th><th>Name</th><th>Price</th><th>Description</th></tr></thead><tbody>";
             while ($row = mysqli_fetch_assoc($res)) {
               $id = htmlspecialchars($row['service_id']);
               $name = htmlspecialchars($row['name']);
               $price = htmlspecialchars($row['price']);
               $desc = htmlspecialchars($row['description']);
-              echo "<tr><td>$id</td><td>$name</td><td>\$$price</td><td>$desc</td></tr>";
+              echo "<div class=\"stat-card service-card\" data-id=\"$id\" data-name=\"$name\">";
+              echo "<div class=\"stat-icon services\">🛁</div>";
+              echo "<div class=\"stat-content\">";
+              echo "<h3 style=\"margin-top:0\">$name</h3>";
+              echo "<p class=\"stat-value\" style=\"font-size:1.75rem;margin:0.5rem 0\">\$$price</p>";
+              echo "<p class=\"muted\" style=\"font-size:0.85rem;margin:0.5rem 0;line-height:1.4\">$desc</p>";
+              echo "</div>";
+              echo "</div>";
             }
-            echo "</tbody></table>";
           } else {
             echo "<p class=\"muted\">No services found. <a href=\"#\">Create one</a></p>";
           }
@@ -81,18 +84,15 @@ include 'db_connect.php';
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const search = document.getElementById('tableSearch');
-      const tables = document.querySelectorAll('table');
+      const grid = document.getElementById('servicesGrid');
       
-      if (search && tables.length > 0) {
+      if (search && grid) {
         search.addEventListener('input', function() {
           const query = this.value.toLowerCase();
-          tables.forEach(table => {
-            if (table.tBodies[0]) {
-              for (let row of table.tBodies[0].rows) {
-                const text = (row.textContent || row.innerText).toLowerCase();
-                row.style.display = text.includes(query) ? '' : 'none';
-              }
-            }
+          const cards = grid.querySelectorAll('.service-card');
+          cards.forEach(card => {
+            const name = card.getAttribute('data-name').toLowerCase();
+            card.style.display = name.includes(query) ? '' : 'none';
           });
         });
       }

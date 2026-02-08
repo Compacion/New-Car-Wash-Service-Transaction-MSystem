@@ -46,19 +46,17 @@
         </form>
       </section>
 
-      <section class="panel table-card">
-        <div class="table-header">
+      <section class="panel">
+        <div style="margin-bottom: 1.5rem;">
           <h2>Client Records</h2>
-          <div class="table-actions">
-            <input id="tableSearch" type="search" placeholder="Search clients...">
-          </div>
+          <input id="tableSearch" type="search" placeholder="Search clients..." style="width: 100%; padding: 0.6rem; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 0.5rem; color: #eaf6f8; margin-top: 0.5rem;">
         </div>
 
-        <div class="table-wrap">
+        <div class="stats-grid" id="clientsGrid">
           <?php
           include("db_connect.php");
 
-          // Show Client Table with latest booking, service and staff (if any)
+          // Show Client as grid cards with latest booking info
           $sql = "SELECT c.*, b.booking_id, b.scheduled_at, s.name AS service_name, st.staff_name AS handled_by
                   FROM client c
                   LEFT JOIN (
@@ -74,29 +72,30 @@
 
           mysqli_report(MYSQLI_REPORT_OFF);
           if ($query && mysqli_num_rows($query) > 0) {
-              echo "<table id=\"clientTable\" class=\"styled-table\">";
-              echo "<thead><tr><th>ID</th><th>Name</th><th>Plate</th><th>Phone</th><th>Vehicle</th><th>Service</th><th>Staff</th><th>Scheduled</th></tr></thead><tbody>";
               while ($row = mysqli_fetch_assoc($query)) {
                   $id = htmlspecialchars($row['client_id']);
                   $name = htmlspecialchars($row['client_name']);
                   $plate = htmlspecialchars($row['plate_number']);
-                  $phone = htmlspecialchars($row['phone_number']);
-                  $vehicle = htmlspecialchars($row['vehicle_type']);
-                  $service = isset($row['service_name']) ? htmlspecialchars($row['service_name']) : '-';
-                  $handled = isset($row['handled_by']) ? htmlspecialchars($row['handled_by']) : '-';
+                  $phone = !empty($row['phone_number']) ? htmlspecialchars($row['phone_number']) : '-';
+                  $vehicle = !empty($row['vehicle_type']) ? htmlspecialchars($row['vehicle_type']) : '-';
+                  $service = isset($row['service_name']) && $row['service_name'] ? htmlspecialchars($row['service_name']) : '-';
+                  $handled = isset($row['handled_by']) && $row['handled_by'] ? htmlspecialchars($row['handled_by']) : '-';
                   $scheduled = isset($row['scheduled_at']) && $row['scheduled_at'] ? htmlspecialchars($row['scheduled_at']) : '-';
-                  echo "<tr data-id=\"$id\">";
-                  echo "<td>$id</td>";
-                  echo "<td>$name</td>";
-                  echo "<td>$plate</td>";
-                  echo "<td>$phone</td>";
-                  echo "<td>$vehicle</td>";
-                  echo "<td>$service</td>";
-                  echo "<td>$handled</td>";
-                  echo "<td>$scheduled</td>";
-                  echo "</tr>";
+                  
+                  echo "<div class=\"stat-card client-card\" data-id=\"$id\" data-name=\"$name\">";
+                  echo "<div class=\"stat-icon clients\">👤</div>";
+                  echo "<div class=\"stat-content\">";
+                  echo "<h3 style=\"margin-top:0\">$name</h3>";
+                  echo "<p class=\"muted\" style=\"margin:0.3rem 0;font-size:0.85rem\"><strong>Plate:</strong> $plate</p>";
+                  echo "<p class=\"muted\" style=\"margin:0.3rem 0;font-size:0.85rem\"><strong>Phone:</strong> $phone</p>";
+                  echo "<p class=\"muted\" style=\"margin:0.3rem 0;font-size:0.85rem\"><strong>Vehicle:</strong> $vehicle</p>";
+                  if ($service !== '-') {
+                    echo "<p class=\"muted\" style=\"margin:0.3rem 0;font-size:0.85rem\"><strong>Service:</strong> $service</p>";
+                    echo "<p class=\"muted\" style=\"margin:0.3rem 0;font-size:0.85rem\"><strong>Attendee:</strong> $handled</p>";
+                  }
+                  echo "</div>";
+                  echo "</div>";
               }
-              echo "</tbody></table>";
           } else {
               echo "<p class=\"muted\">No client records found.</p>";
           }
@@ -111,15 +110,16 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const search = document.getElementById('tableSearch');
-      const table = document.getElementById('clientTable');
+      const grid = document.getElementById('clientsGrid');
       
-      if (search && table) {
+      if (search && grid) {
         search.addEventListener('input', function() {
           const query = this.value.toLowerCase();
-          for (let row of table.tBodies[0].rows) {
-            const text = (row.textContent || row.innerText).toLowerCase();
-            row.style.display = text.includes(query) ? '' : 'none';
-          }
+          const cards = grid.querySelectorAll('.client-card');
+          cards.forEach(card => {
+            const name = card.getAttribute('data-name').toLowerCase();
+            card.style.display = name.includes(query) ? '' : 'none';
+          });
         });
       }
     });
