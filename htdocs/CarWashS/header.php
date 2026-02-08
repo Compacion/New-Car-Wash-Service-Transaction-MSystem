@@ -13,26 +13,25 @@
       </a>
     </div>
 
-    < class="main-nav" id="mainNav" role="navigation" aria-label="Primary">
+    <div class="main-nav" id="mainNav" role="navigation" aria-label="Primary">
       <ul>
         <li><a href="homepage.php" title="Choose Services Here">Services</a></li>
         <li><a href="client.php" title="Add Client Here">Client</a></li>
         <li><a href="staff.php" title="Add Staff Here">Staff</a></li>
       </ul>
-    </nav>
+    </div>
 
-      <div class="user-block" style="position:relative">
-        <button id="userBtn" class="user-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="userMenu">
-          <img src="images/avatar.png" alt="User avatar" class="user-avatar" />
-        </button>
-        <div id="userMenu" class="user-menu" role="menu" hidden>
-          <a href="homepage.php" role="menuitem">Services</a>
-          <a href="client.php" role="menuitem">Client</a>
-          <a href="staff.php" role="menuitem">Staff</a>
-        </div>
+    <div class="user-block" style="position:relative">
+      <button id="userBtn" class="user-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="userMenu">
+        <span class="user-avatar" aria-hidden="true">👤</span>
+      </button>
+      <div id="userMenu" class="user-menu" role="menu" hidden>
+        <a href="homepage.php" role="menuitem">Services</a>
+        <a href="client.php" role="menuitem">Client</a>
+        <a href="staff.php" role="menuitem">Staff</a>
       </div>
     </div>
   </div>
 </nav>
 
-<script src="includes/nav.js" defer></script>
+<script src="nav.js" defer></script>

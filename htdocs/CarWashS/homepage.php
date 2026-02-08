@@ -9,6 +9,7 @@ include 'db_connect.php';
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Services - The Crew Car Wash</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="/favicon.png">
 </head>
 <body>
   <?php include 'navigation.php'; ?>
